@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lời Mời Đặc Biệt 💌</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffeaa7; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(253, 121, 168, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+        .gif-container img {
+            width: 200px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #d63031;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #636e72;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+            height: 45px;
+            align-items: center;
+        }
+        button {
+            padding: 10px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        #yes-btn {
+            background-color: #fd79a8;
+            color: white;
+            box-shadow: 0 4px 15px rgba(253, 121, 168, 0.4);
+            z-index: 10;
+        }
+        #yes-btn:hover {
+            background-color: #e84393;
+            transform: scale(1.05);
+        }
+        #no-btn {
+            background-color: #dfe6e9;
+            color: #2d3436;
+            position: relative; 
+            z-index: 20;
+        }
+        #success-msg {
+            display: none;
+        }
+        .food-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .food-btn {
+            background: #fff;
+            border: 2px solid #fd79a8;
+            color: #e84393;
+            padding: 12px;
+            font-size: 16px;
+        }
+        .food-btn:hover {
+            background: #fd79a8;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="main-card">
+        <div class="gif-container">
+            <img src="https://media.tenor.com/ef3Gz4Y9Q4AAAAAj/tkthao219-bubududu.gif" alt="Cute Bear">
+        </div>
+        <h1>Đi ăn tối với anh nhé? 🥺</h1>
+        <p>Hôm nay em đã vất vả rồi, để anh mời em một bữa ngon nha!</p>
+        
+        <div class="buttons">
+            <button id="yes-btn">Dạ đồng ý! ❤️</button>
+            <button id="no-btn">Em bận rồi 💔</button>
+        </div>
+    </div>
+
+    <div class="card" id="success-msg">
+        <div class="gif-container">
+            <img src="https://media.tenor.com/tHqgUAnE-zIAAAAj/tkthao219-bubududu.gif" alt="Happy Bear">
+        </div>
+        <h1>Yayyyy! 🥰</h1>
+        <p>Công chúa muốn ăn gì để anh chuẩn bị nào?</p>
+        <div class="food-options">
+            <button class="food-btn">🍕 Pizza ngập phô mai</button>
+            <button class="food-btn">🥩 Bít tết lãng mạn</button>
+            <button class="food-btn">🍣 Sushi thanh mát</button>
+            <button class="food-btn">🍲 Gì cũng được ạ</button>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('no-btn');
+        const yesBtn = document.getElementById('yes-btn');
+        const mainCard = document.getElementById('main-card');
+        const successMsg = document.getElementById('success-msg');
+        const foodBtns = document.querySelectorAll('.food-btn');
+
+        // Logic né tránh hoàn chỉnh của nút "Không"
+        function moveButton() {
+            noBtn.style.position = 'fixed';
+            
+            // Tính toán giới hạn màn hình để nút không văng ra ngoài
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+            
+            // Random tọa độ mới
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        // Kích hoạt khi di chuột hoặc chạm trên điện thoại
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', moveButton);
+
+        // Chuyển màn hình khi bấm Đồng ý
+        yesBtn.addEventListener('click', () => {
+            mainCard.style.display = 'none';
+            successMsg.style.display = 'block';
+        });
+
+        // Xử lý khi cô ấy chọn món ăn
+        foodBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const monAn = e.target.innerText;
+                // Hiển thị thông báo dễ thương yêu cầu chụp màn hình
+                alert(`Tuyệt vời! Em đã chọn: "${monAn}".\n\nHãy chụp màn hình thông báo này và gửi cho anh ngay nhé! Hẹn gặp em tối nay ❤️`);
+            });
+        });
+    </script>
+</body>
+</html>
