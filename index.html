@@ -14,6 +14,7 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            touch-action: manipulation; /* Giúp mobile mượt hơn */
         }
         .card {
             background: white;
@@ -40,6 +41,7 @@
             font-size: 16px;
             margin-bottom: 30px;
         }
+        /* Tách riêng container chứa 2 nút để khi nút No chạy mất, No không đè lên Yes */
         .buttons {
             display: flex;
             justify-content: center;
@@ -47,6 +49,7 @@
             position: relative;
             height: 45px;
             align-items: center;
+            /* Giữ vị trí tương đối để khi nút No nhảy mất, bố cục container không thay đổi */
         }
         button {
             padding: 10px 25px;
@@ -56,6 +59,7 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s;
+            user-select: none; /* Ngăn chặn bôi đen chữ khi bấm liên tục */
         }
         #yes-btn {
             background-color: #fd79a8;
@@ -70,8 +74,9 @@
         #no-btn {
             background-color: #dfe6e9;
             color: #2d3436;
-            position: relative; 
+            position: absolute; /* Quan trọng: Bắt đầu ở vị trí tuyệt đối */
             z-index: 20;
+            transition: left 0.1s ease, top 0.1s ease; /* Thêm hiệu ứng trượt nhẹ */
         }
         #success-msg {
             display: none;
@@ -104,9 +109,9 @@
         <h1>Đi ăn tối với anh nhé? 🥺</h1>
         <p>Hôm nay em đã vất vả rồi, để anh mời em một bữa ngon nha!</p>
         
-        <div class="buttons">
+        <div class="buttons" id="btn-container">
             <button id="yes-btn">Dạ đồng ý! ❤️</button>
-            <button id="no-btn">Em bận</button>
+            <button id="no-btn">Em bận rồi 💔</button>
         </div>
     </div>
 
@@ -131,25 +136,48 @@
         const successMsg = document.getElementById('success-msg');
         const foodBtns = document.querySelectorAll('.food-btn');
 
-        // Logic né tránh hoàn chỉnh của nút "Không"
-        function moveButton() {
+        // Hàm di chuyển nút No né tránh
+        function moveButton(e) {
+            // 1. NGĂN CHẶN SỰ KIỆN CLICK SƠ CẤP (QUAN TRỌNG NHẤT)
+            if(e) e.preventDefault();
+
+            // Chuyển nút sang chế độ fixed để nhảy toàn màn hình
             noBtn.style.position = 'fixed';
             
-            // Tính toán giới hạn màn hình để nút không văng ra ngoài
-            const maxX = window.innerWidth - noBtn.offsetWidth;
-            const maxY = window.innerHeight - noBtn.offsetHeight;
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
             
-            // Random tọa độ mới
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
+            // Tính toán giới hạn màn hình
+            const maxX = window.innerWidth - btnWidth - 20;
+            const maxY = window.innerHeight - btnHeight - 20;
+            
+            // Random tọa độ, đảm bảo nó cách xa vị trí cũ ít nhất 20% chiều rộng màn hình
+            let randomX, randomY;
+            const safeDistance = window.innerWidth * 0.2;
+            
+            const currentX = parseInt(noBtn.style.left) || window.innerWidth/2;
+            const currentY = parseInt(noBtn.style.top) || window.innerHeight/2;
 
+            do {
+                randomX = Math.floor(Math.random() * maxX);
+                randomY = Math.floor(Math.random() * maxY);
+            } while (
+                Math.abs(randomX - currentX) < safeDistance && 
+                Math.abs(randomY - currentY) < safeDistance
+            );
+
+            // Gán tọa độ mới
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
         }
 
-        // Kích hoạt khi di chuột hoặc chạm trên điện thoại
+        // --- CỬ CHỈ CHO MÁY TÍNH ---
+        // Sử dụng mouseover: Chỉ cần đưa chuột lại gần là chạy
         noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('touchstart', moveButton);
+
+        // --- CỬ CHỈ CHO ĐIỆN THOẠI ---
+        // Sử dụng touchstart + e.preventDefault() để chặn cái click vô tình
+        noBtn.addEventListener('touchstart', moveButton, {passive: false});
 
         // Chuyển màn hình khi bấm Đồng ý
         yesBtn.addEventListener('click', () => {
@@ -161,8 +189,7 @@
         foodBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const monAn = e.target.innerText;
-                // Hiển thị thông báo dễ thương yêu cầu chụp màn hình
-                alert(`Tuyệt vời! Em đã chọn: "${monAn}".\n\nHãy chụp màn hình thông báo này và gửi cho anh ngay nhé! Hẹn gặp em tối nay ❤️`);
+                alert(`Tuyệt vời! Em đã chọn: "${monAn}".\n\nHãy chụp màn hình thông báo này và gửi cho THAI NGUYEN ngay nhé! Hẹn gặp em tối nay ❤️`);
             });
         });
     </script>
