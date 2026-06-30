@@ -106,12 +106,12 @@
         <div class="gif-container">
             <img src="https://media.tenor.com/ef3Gz4Y9Q4AAAAAj/tkthao219-bubududu.gif" alt="Cute Bear">
         </div>
-        <h1>Đi ăn tối với anh nhé? 🥺</h1>
-        <p>Hôm nay em đã vất vả rồi, để anh mời em một bữa ngon nha!</p>
+        <h1>Thứ 6 mình ăn gì nào em iu </h1>
+        <p>Có thực mới vực được đạo, ăn uống trước rùi mình tâm hự sau nha</p>
         
         <div class="buttons" id="btn-container">
             <button id="yes-btn">Dạ đồng ý! ❤️</button>
-            <button id="no-btn">Em bận rồi 💔</button>
+            <button id="no-btn">Em bận</button>
         </div>
     </div>
 
@@ -122,76 +122,78 @@
         <h1>Yayyyy! 🥰</h1>
         <p>Công chúa muốn ăn gì để anh chuẩn bị nào?</p>
         <div class="food-options">
-            <button class="food-btn">🍕 Pizza ngập phô mai</button>
+            <button class="food-btn">Ốc hương 🐌</button>
             <button class="food-btn">🥩 Bít tết lãng mạn</button>
-            <button class="food-btn">🍣 Sushi thanh mát</button>
+            <button class="food-btn">Bò lá lốt ĐBP</button>
             <button class="food-btn">🍲 Gì cũng được ạ</button>
         </div>
     </div>
 
-    <script>
-        const noBtn = document.getElementById('no-btn');
-        const yesBtn = document.getElementById('yes-btn');
-        const mainCard = document.getElementById('main-card');
-        const successMsg = document.getElementById('success-msg');
-        const foodBtns = document.querySelectorAll('.food-btn');
+   const noBtn = document.getElementById('no-btn');
+const yesBtn = document.getElementById('yes-btn');
+const mainCard = document.getElementById('main-card');
+const successMsg = document.getElementById('success-msg');
+const foodBtns = document.querySelectorAll('.food-btn');
 
-        // Hàm di chuyển nút No né tránh
-        function moveButton(e) {
-            // 1. NGĂN CHẶN SỰ KIỆN CLICK SƠ CẤP (QUAN TRỌNG NHẤT)
-            if(e) e.preventDefault();
+// Bỏ URL Webhook của bạn vào đây (Xem hướng dẫn lấy URL ở dưới)
+const DISCORD_WEBHOOK_URL = 'DÁN_URL_WEBHOOK_CỦA_BẠN_VÀO_ĐÂY';
 
-            // Chuyển nút sang chế độ fixed để nhảy toàn màn hình
-            noBtn.style.position = 'fixed';
-            
-            const btnWidth = noBtn.offsetWidth;
-            const btnHeight = noBtn.offsetHeight;
-            
-            // Tính toán giới hạn màn hình
-            const maxX = window.innerWidth - btnWidth - 20;
-            const maxY = window.innerHeight - btnHeight - 20;
-            
-            // Random tọa độ, đảm bảo nó cách xa vị trí cũ ít nhất 20% chiều rộng màn hình
-            let randomX, randomY;
-            const safeDistance = window.innerWidth * 0.2;
-            
-            const currentX = parseInt(noBtn.style.left) || window.innerWidth/2;
-            const currentY = parseInt(noBtn.style.top) || window.innerHeight/2;
+function moveButton(e) {
+    if(e) e.preventDefault();
+    noBtn.style.position = 'fixed';
+    const maxX = window.innerWidth - noBtn.offsetWidth;
+    const maxY = window.innerHeight - noBtn.offsetHeight;
+    let randomX, randomY;
+    const safeDistance = window.innerWidth * 0.2;
+    const currentX = parseInt(noBtn.style.left) || window.innerWidth/2;
+    const currentY = parseInt(noBtn.style.top) || window.innerHeight/2;
 
-            do {
-                randomX = Math.floor(Math.random() * maxX);
-                randomY = Math.floor(Math.random() * maxY);
-            } while (
-                Math.abs(randomX - currentX) < safeDistance && 
-                Math.abs(randomY - currentY) < safeDistance
-            );
+    do {
+        randomX = Math.floor(Math.random() * maxX);
+        randomY = Math.floor(Math.random() * maxY);
+    } while (
+        Math.abs(randomX - currentX) < safeDistance && 
+        Math.abs(randomY - currentY) < safeDistance
+    );
 
-            // Gán tọa độ mới
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
-        }
+    noBtn.style.left = randomX + 'px';
+    noBtn.style.top = randomY + 'px';
+}
 
-        // --- CỬ CHỈ CHO MÁY TÍNH ---
-        // Sử dụng mouseover: Chỉ cần đưa chuột lại gần là chạy
-        noBtn.addEventListener('mouseover', moveButton);
+noBtn.addEventListener('mouseover', moveButton);
+noBtn.addEventListener('touchstart', moveButton, {passive: false});
 
-        // --- CỬ CHỈ CHO ĐIỆN THOẠI ---
-        // Sử dụng touchstart + e.preventDefault() để chặn cái click vô tình
-        noBtn.addEventListener('touchstart', moveButton, {passive: false});
+yesBtn.addEventListener('click', () => {
+    mainCard.style.display = 'none';
+    successMsg.style.display = 'block';
+});
 
-        // Chuyển màn hình khi bấm Đồng ý
-        yesBtn.addEventListener('click', () => {
-            mainCard.style.display = 'none';
-            successMsg.style.display = 'block';
+// XỬ LÝ GỬI THÔNG TIN VỀ ĐIỆN THOẠI
+foodBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const monAn = e.target.innerText;
+
+        // Nội dung tin nhắn sẽ bắn về Discord của bạn
+        const messageData = {
+            content: `🔔 **THÔNG BÁO HẸN HÒ!**\nCô ấy đã đồng ý đi ăn tối với bạn!\nMón ăn được chọn: **${monAn}** 🥰\nChuẩn bị lên đồ thôi THAI NGUYEN ơi!`
+        };
+
+        // Gửi ngầm dữ liệu lên Discord
+        fetch(DISCORD_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(messageData)
+        })
+        .then(() => {
+            // Khi gửi thành công, hiển thị thông báo ngọt ngào cho nàng
+            alert(`Tuyệt vời ông mặt trời! Anh đã nhận được lựa chọn "${monAn}" của em rồi nhé. Hẹn gặp công chúa T6 nhe ❤️`);
+        })
+        .catch(err => {
+            // Phòng hờ lỗi mạng không gửi được, vẫn hiện alert để giữ mạch tinh tế
+            alert(`Tuyệt vời! Em đã chọn: "${monAn}". Hẹn gặp em T6 nhe ❤️`);
+            console.error('Lỗi gửi webhook:', err);
         });
-
-        // Xử lý khi cô ấy chọn món ăn
-        foodBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const monAn = e.target.innerText;
-                alert(`Tuyệt vời! Em đã chọn: "${monAn}".\n\nHãy chụp màn hình thông báo này và gửi cho THAI NGUYEN ngay nhé! Hẹn gặp em tối nay ❤️`);
-            });
-        });
-    </script>
+    });
+});
 </body>
 </html>
